@@ -31,6 +31,11 @@ class Person(models.Model):
         """Retruns the person's full name."""
         return "%s %s"%(self.first_name, self.last_name)
 
+    def save(self, *args, **kargvs):
+        print("Person's save().")
+        super(Person, self).save(*args, **kargvs)
+        print("Person's save() end.")
+
     full_name = property(_get_full_name)
 
     def __str__(self):
@@ -86,5 +91,29 @@ class Ox(models.Model):
     class Meta:
         ordering = ["horn_length"]
         verbose_name_plural = "oxen"
+
+class CommonInfo(models.Model):
+    name = models.CharField('name', max_length=30)
+    age = models.IntegerField('age', default=0)
+    class Meta:
+        abstract = True
+        ordering = ['name']
+
+class Student(CommonInfo):
+    school = models.CharField('school', max_length=100)
+    class Meta(CommonInfo.Meta):
+        db_table = "student_info"
+    def __str__(self):
+        return '%s'%self.name
+
+class Place(models.Model):
+    name = models.CharField('name', max_length=30)
+    age = models.IntegerField('age', default=0)
+    def __str__(self):
+        return '%s'%self.name
+
+class Restrant(Place):
+    serves_hot_dogs = models.BooleanField(default=False)
+    serve_pizza = models.BooleanField(default=False)
 
 
