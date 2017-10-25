@@ -25,6 +25,7 @@ class Person(models.Model):
         elif self.birth_date > datetime.date(1965, 1, 1):
             return "Baby boomer"
         else:
+            print("help")
             return "Post boomer"
 
     def _get_full_name(self):
