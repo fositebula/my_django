@@ -1,0 +1,27 @@
+{% extends 'lava_submission/base.html' %}
+{% block content %}
+    <table border="1">
+        <tr>
+            <td>branch</td>
+            <td>project</td>
+            <td>manager</td>
+            <td>task type</td>
+            <td>device type</td>
+            <td>stop flag</td>
+            <td>server info</td>
+            <td>modify date</td>
+        </tr>
+        {% for project_info in project_infos %}
+            <tr>
+                <td>{{ project_info.branch_name }}</td>
+                <td>{{ project_info.project_name }}</td>
+                <td>{{ project_info.managers_mail }}</td>
+                <td>{{ project_info.task_type }}</td>
+                <td>{{ project_info.device_type }}</td>
+                <td>{{ project_info.stop_flag }}</td>
+                <td>{{ project_info.device_in_server }}</td>
+                <td>{{ project_info.modify_date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
