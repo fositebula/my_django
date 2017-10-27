@@ -10,5 +10,10 @@
 {#        <p>lava server: <input type="" name="lname" /></p>#}
 {#        <input type="submit" value="Submit" />#}
 {#    </form>#}
-    {{ project_form }}
+    <form action="saveInfo/" method="post">
+        {% csrf_token %}
+        {{ project_form }}
+        <input type="hidden" name='infoID' value="{{ infoID }}">
+        <input type="submit" name='add' value="save">
+    </form>
 {% endblock %}

@@ -1,13 +1,5 @@
 {% extends 'lava_submission/base.html' %}
 {% block content %}
-    <div>
-    <form action="search_info/result/" method="post">
-        {% csrf_token %}
-        <label>search:</label>
-        <input type="text" name="searched_info">
-        <input type="submit" value="search">
-    </form>
-    </div>
     <table border="1">
         <tr>
             <td>id</td>
@@ -40,22 +32,5 @@
                 </td>
             </tr>
         {% endfor %}
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <form action="addInfo/" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="add">
-                    </form>
-                </td>
-            </tr>
     </table>
 {% endblock %}

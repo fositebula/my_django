@@ -18,14 +18,19 @@ class LavaServerInfo(models.Model):
             return "%s in %s"%(self.server_ip, self.location)
 
 class VerifyProjectInfo(models.Model):
+    DEVICE_TYPE = (
+        ('verify','verify'),
+        ('daily','daily'),
+        ('manual','manual'),
+    )
     branch_name = models.CharField('Branch Name', max_length=50)
     project_name = models.CharField('Project Name', max_length=50)
     managers_mail = models.EmailField('Email', max_length=254)
-    task_type = models.CharField('Task Type', max_length=20)
+    task_type = models.CharField('Task Type', max_length=20, choices=DEVICE_TYPE)
     device_type = models.CharField('Device Type', max_length=50)
     stop_flag = models.BooleanField('Stopping Test', default=False)
     device_in_server = models.ForeignKey(LavaServerInfo)
-    modify_date = models.DateField()
+    modify_date = models.DateField(auto_now=True)
 
     def __str__(self):
         return "%s:%s" % (self.branch_name, self.project_name)

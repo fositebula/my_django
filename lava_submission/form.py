@@ -1,5 +1,6 @@
 from django import forms
 from .models import VerifyProjectInfo
+from django.core.exceptions import NON_FIELD_ERRORS
 
 # class AddProjectInfo(forms.Form):
 #
@@ -16,4 +17,13 @@ class ProjectInfoFrom(forms.ModelForm):
     class Meta:
         model = VerifyProjectInfo
         fields = ["branch_name", "project_name", "managers_mail", "task_type", "device_type",
-                  "stop_flag", "device_in_server", "modify_date"]
+                  "stop_flag", "device_in_server"]
+        error_messages = {
+            NON_FIELD_ERRORS:{
+                'unique_together':"%(model_name)'s %(field_labels)s are not unique.",
+            }
+        }
+        # widgets = {
+        #     'branch_name': forms.Textarea(attrs={'cols': 80, 'rows': 20}),
+        #     'project_name': forms.
+        # }
