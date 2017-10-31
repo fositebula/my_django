@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^articles/', include('blog.urls')),
     url(r'^polls/', include('polls.urls', namespace='polls')),
+    url(r'^lava_submit/', include('lava_submission.urls', namespace='lava_submission'))
 ]

@@ -24,3 +24,4 @@ from . import models
 # admin.site.register(models.Question, QuestionAdmin)
 admin.site.register(models.VerifyProjectInfo)
 admin.site.register(models.LavaServerInfo)
+admin.site.register(models.BranchProjectInfo)

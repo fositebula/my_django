@@ -4,6 +4,18 @@ from __future__ import unicode_literals
 from django.db import models
 
 # Create your models here.
+
+class BranchProjectInfo(models.Model):
+    branch_name = models.CharField('Branch Name', max_length=50)
+    project_name = models.CharField("Project Name", max_length=50)
+    update_date = models.DateField('UpDate Date', auto_now=True)
+
+    def __str__(self):
+        return "%s : %s"%(self.branch_name, self.project_name)
+    def exists(self, branch_name, project_name):
+        return
+
+
 class LavaServerInfo(models.Model):
     location = models.CharField('Location', max_length=20)
     server_hostname = models.CharField('Host Name', max_length=50)
@@ -19,12 +31,11 @@ class LavaServerInfo(models.Model):
 
 class VerifyProjectInfo(models.Model):
     DEVICE_TYPE = (
-        ('verify','verify'),
-        ('daily','daily'),
-        ('manual','manual'),
+        ('verify', 'verify'),
+        ('daily', 'daily'),
+        ('manual', 'manual'),
     )
-    branch_name = models.CharField('Branch Name', max_length=50)
-    project_name = models.CharField('Project Name', max_length=50)
+    branch_project_info = models.ForeignKey(BranchProjectInfo)
     managers_mail = models.EmailField('Email', max_length=254)
     task_type = models.CharField('Task Type', max_length=20, choices=DEVICE_TYPE)
     device_type = models.CharField('Device Type', max_length=50)
@@ -33,4 +44,7 @@ class VerifyProjectInfo(models.Model):
     modify_date = models.DateField(auto_now=True)
 
     def __str__(self):
-        return "%s:%s" % (self.branch_name, self.project_name)
+        return "%s:%s" % (self.branch_project_info.branch_name, self.branch_project_info.project_name)
+
+
+

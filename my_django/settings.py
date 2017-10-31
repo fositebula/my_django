@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'blog',
     'polls',
     'model_study',
+    'lava_submission',
 ]
 
 MIDDLEWARE = [
