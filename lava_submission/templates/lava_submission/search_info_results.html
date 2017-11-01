@@ -15,8 +15,8 @@
         {% for project_info in project_infos %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ project_info.branch_name }}</td>
-                <td>{{ project_info.project_name }}</td>
+                <td>{{ project_info.branch_project_info.branch_name }}</td>
+                <td>{{ project_info.branch_project_info.project_name }}</td>
                 <td>{{ project_info.managers_mail }}</td>
                 <td>{{ project_info.task_type }}</td>
                 <td>{{ project_info.device_type }}</td>

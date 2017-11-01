@@ -56,6 +56,14 @@
                     <form action="addInfo/" method="post">
                         {% csrf_token %}
                         <input type="submit" value="add">
+{#                        <select name="branch_type" required id="id_branch_type">#}
+{#                            <option value>-------------</option>#}
+{#                            {% if branch_types.count != 0 %}#}
+{#                                {% for type in branch_types %}#}
+{#                                <option value="{{ type.id }}">{{ type.name }}</option>#}
+{#                                {% endfor %}#}
+{#                            {% endif %}#}
+{#                        </select>#}
                     </form>
                 </td>
             </tr>

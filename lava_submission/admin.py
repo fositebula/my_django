@@ -25,3 +25,4 @@ from . import models
 admin.site.register(models.VerifyProjectInfo)
 admin.site.register(models.LavaServerInfo)
 admin.site.register(models.BranchProjectInfo)
+admin.site.register(models.VerifyBranchType)

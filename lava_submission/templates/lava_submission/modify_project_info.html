@@ -10,9 +10,9 @@
 {#        <p>lava server: <input type="" name="lname" /></p>#}
 {#        <input type="submit" value="Submit" />#}
 {#    </form>#}
-    <form action="{% url 'lava_submission:add_info' %}" method="post">
+    <form action="{% url 'lava_submission:modify_info' %}" method="post">
         {% csrf_token %}
-{#        <input type="hidden" name="branch_type" value="{{ branch_type }}">#}
+        <input type="hidden" name="edit" value="{{ infoID }}">
         <input type="submit" value="update">
     </form>
     <form action="{% url 'lava_submission:save_info' %}" method="post">
