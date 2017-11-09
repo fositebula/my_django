@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'polls',
     'model_study',
     'lava_submission',
+    'job_collector',
 ]
 
 MIDDLEWARE = [
@@ -77,11 +78,22 @@ WSGI_APPLICATION = 'my_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mysql',
+        'USER': 'root',
+        'PASSWORD': '123@abAB',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
+
 }
 
 

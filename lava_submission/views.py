@@ -21,6 +21,9 @@ import xmlrpclib
 def get_lava_servers():
     server_infos = LavaServerInfo.objects.all()
     servers = []
+    print ("http://%s:%s@%s/RPC2" % (info.submit_user_name
+                              , info.submit_user_token
+                              , info.server_hostname))
     for info in server_infos:
         server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (info.submit_user_name
                                                                  , info.submit_user_token
@@ -28,9 +31,7 @@ def get_lava_servers():
         servers.append(server)
     return servers
 
-def get_device_type_from_server(servers):
-    devices = {}
-
+def get_device_type_from_server():
     server_infos = LavaServerInfo.objects.all()
     for info in server_infos:
         server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (info.submit_user_name
@@ -38,37 +39,48 @@ def get_device_type_from_server(servers):
                                                                  , info.server_hostname))
         device_types = server.scheduler.device_types.list()
         for device_type in device_types:
-            DeviceType(name=device_type['name'], lava_server=info)
-            DeviceType.save()
+            #print("####",DeviceType.objects.filter(name=device_type['name']))
+            dt = DeviceType.objects.filter(name=device_type['name'])
+            if dt.count()==0:
+                dt = DeviceType(name=device_type['name'], lava_server=info)
+                dt.save()
 
 
 def get_branch_project_info_from_jenkins():
     bp_info = VerifyBranchType.objects.all()
+    infos = {}
+    try:
+        for info in bp_info:
+            r = requests.get(info.url_str)
+            t = re.findall("<option value=\"(.*?)\">.*?</option>", r.text)
 
-    for info in bp_info:
-
-        r = requests.get(info.url_str)
-        t = re.findall("<option value=\"(.*?)\">.*?</option>", r.text)
-
-        infos = {}
-        for project_info in t:
-            if ":" in project_info:
-                ii = project_info.strip().split(":")
-                if infos.has_key(ii[0]):
-                    infos[ii[0]].append(ii[1])
-                else:
-                    infos[ii[0]] = [ii[1]]
-    return infos
+            for project_info in t:
+                if ":" in project_info:
+                    ii = project_info.strip().split(":")
+                    if infos.has_key(ii[0]):
+                        infos[ii[0]].append(ii[1])
+                    else:
+                        infos[ii[0]] = [ii[1]]
+        return infos
+    except Exception as e:
+        Http404(e.message)
 
 def db_save_branch_project_infos(infos):
-    for branch_info in infos.keys():
-        for p_info in infos[branch_info]:
-            try:
-                BranchProjectInfo.objects.get(Q(branch_name=branch_info)
-                                              &Q(project_name=p_info))
-            except ObjectDoesNotExist:
-                t_info = BranchProjectInfo(branch_name=branch_info, project_name=p_info, branch_type=branch_type)
-                t_info.save()
+
+    try:
+        for branch_info in infos.keys():
+            for p_info in infos[branch_info]:
+                try:
+                   q_set = BranchProjectInfo.objects.filter(Q(branch_name=branch_info)
+                                                  &Q(project_name=p_info))
+                   if q_set.count() == 0:
+                        t_info = BranchProjectInfo(branch_name=branch_info, project_name=p_info)
+                        t_info.save()
+
+                except ObjectDoesNotExist:
+                        Http404(e.message)
+    except Exception as e:
+        Http404(e.message)
 
 # Create your views here.
 class IndexView(generic.ListView):
@@ -83,9 +95,7 @@ class IndexView(generic.ListView):
             return infos
 
     def get_context_data(self, **kwargs):
-        servers = get_lava_servers()
-        devices = get_device_type_from_server(servers)
-        print("###", devices)
+        get_device_type_from_server()
         infos = VerifyProjectInfo.objects.order_by('-modify_date')
         branch_types = VerifyBranchType.objects.all()
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -132,7 +142,7 @@ def save_info_iterm(request):
             form.save()
             return HttpResponseRedirect(reverse('lava_submission:submission_index'))
         else:
-            branch_type = VerifyBranchType.objects.get(pk=1)
+            branch_type = VerifyBranchType.objects.get(pk=2)
             info = VerifyProjectInfo(branch_type=branch_type)
             form = ProjectInfoFrom(request.POST, instance=info)
             form.save()
@@ -146,10 +156,19 @@ def SearchProjectInfo(request):
     if request.method == "POST":
         template = get_template("lava_submission/search_info_results.html")
         searched_info = request.POST['searched_info'].strip()
-        searched_results = VerifyProjectInfo.objects.filter(Q(branch_project_info__branch_name__contains=searched_info) |
-                                                         Q(branch_project_info__project_name__contains=searched_info) |
-                                                         Q(device_type__contains=searched_info)|
-                                                         Q(task_type__contains=searched_info))
+        if searched_info == "True" or searched_info == "False":
+            print("####1", searched_info)
+            #searched_info = bool(searched_info)
+            searched_results = VerifyProjectInfo.objects.filter(Q(stop_flag=searched_info))
+        else:
+            print("####2")
+            print(searched_info)
+            searched_results = VerifyProjectInfo.objects.filter(Q(branch_project_info__branch_name__contains=searched_info)|
+                                                             Q(branch_project_info__project_name__contains=searched_info)|
+                                                             Q(device_type__name__contains=searched_info)|
+                                                             Q(task_type__contains=searched_info))
+        # searched_results = VerifyProjectInfo.objects.all()
+        print("####", searched_results)
         context = {"project_infos":searched_results}
 
         return HttpResponse(template.render(context))
