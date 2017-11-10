@@ -94,7 +94,7 @@ class TestJob(models.Model):
     )
     testcase = models.CharField(
         help_text=u"formate ${casename}:${result}",
-        verbose_name='buildid', max_length=200, default=None
+        verbose_name='buildid', max_length=200, default="default"
     )
     collect_infos = models.ForeignKey('CollectInfos')
 

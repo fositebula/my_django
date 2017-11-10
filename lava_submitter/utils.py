@@ -3,6 +3,7 @@ import os
 import tarfile
 import time
 import random
+from lava_submitter.JobData.android_data import AndroidData
 
 def get_image_url(branch, project, url):
     image_url = url + "/artifact/sps.image/" + branch + "/" + project + ".tar.gz"
@@ -46,6 +47,7 @@ def get_image(image_type, local_path):
         return local_path + "/" + image_type + ".img"
     else:
         return None
+
 
 if __name__ == '__main__':
     url = get_image_url("sprdroid7.0_trunk_k44", "sp9850kh_1h10_smtcmcc-userdebug-native",

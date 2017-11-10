@@ -2,10 +2,64 @@
 
 from job_collector.models import CollectInfos, TestJob
 from lava_submission.models import VerifyProjectInfo
+import xmlrpclib
+from lava_submitter.utils import get_image, download_image, decompress, get_image_url
+from lava_submitter.JobData.android_data import AndroidData
+
+def get_job_data(device_type, boot=None, system=None, userdata=None):
+    job_data = AndroidData(device_type, boot=boot, system=system, userdata=userdata, job_name="lava_test_job")
+    return job_data.get_data_str
+
+def repository_to_image(repo_l):
+    """
+        sprdlinux4.4--------------------------->boot
+        sprduboot64_v201507 ------------------->u-boot
+        sprdchipram16,sprdroid6.0_whale_dev --->u-boot-spl-16k
+        sprd_trusty --------------------------->tos
+        arm-trusted-firmware------------------->sml
+    """
+    image_name = []
+    for repo in repo_l:
+        if repo == "sprdlinux4.4":
+            image_name.append(("boot", "boot"))
+        if repo == "sprduboot64_v201507":
+            image_name.append(("uboot", "u-boot"))
+        if repo == "sprdchipram16"\
+                or repo == "sprdroid6.0_whale_dev":
+            image_name.append(("u-boot-spl-16k", "u-boot-spl-16k"))
+        if repo == "sprd_trusty":
+            image_name.append(("tos", "tos"))
+        if repo == "arm-trusted-firmware":
+            image_name.append(("sml", "sml"))
+    return tuple(image_name)
+
+def get_images(repo_image_list, local_path):
+    image_paths = {}
+    for image_type in repo_image_list:
+        image_paths[image_type[0]] = get_image(image_type[1], local_path)
+    return image_paths
 
 class Submitter(object):
-    def __init__(self):
+    def __init__(self, branch_project_info, job_data):
+        self.lava_server_ip = branch_project_info.device_in_server.server_ip
+        self.lava_server_user = branch_project_info.device_in_server.submit_user_name
+        self.lava_server_token = branch_project_info.device_in_server.submit_user_token
+        self.device_type = branch_project_info.device_in_server.device_type
+        self.job_data = job_data
         pass
+
+    def _get_lava_server(self):
+        server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (
+            self.lava_server_user,
+            self.lava_server_token,
+            self.lava_server_ip))
+        return server
+
+    def submit_job(self):
+        server = self._get_lava_server()
+        jobid = server.scheduler.submit_job(self.job_data)
+        return jobid
+
 
 class InfoParse(object):
     def __init__(self, source, reactor, info):
@@ -14,22 +68,41 @@ class InfoParse(object):
         self.info = info
 
     def _parse_info(self):
-        branch_project_info = VerifyProjectInfo.objects.filter(
-            branch_project_info__branch_name=self.info.branch,
-            branch_project_info__project_name=self.info.project
-        )
-        if branch_project_info.count() == 0:
+        try:
+            branch_project_info = VerifyProjectInfo.objects.get(
+                branch_project_info__branch_name=self.info.branch,
+                branch_project_info__project_name=self.info.project
+            )
             self.info.filted = True
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info not in the submit white list!"
             self.info.save()
             print("submit failed")
-        else:
-            #下载image文件
-            #将测试信息合成yaml文件
-            #调用submit提交job
-            #保存提交后的信息
-            print("submit successfully")
+        except Exception as e:
+            print("Did not fond the white list. %s"%e.message)
+            return
+
+        #下载image文件
+        url = get_image_url(self.info.branch, self.info.project, self.info.verify_url)
+        print(url)
+        f = download_image(url)
+        path = decompress(f)
+        repo_l = self.info.repository.split(",")
+        repo_tl = repository_to_image(repo_l)
+        info_data = get_images(repo_tl, path)
+        #将测试信息合成yaml文件
+        android_data = AndroidData(info_data)
+        yaml_str = android_data.get_data_str()
+        #调用submit提交job
+        submitter = Submitter(branch_project_info, yaml_str)
+        jobid = submitter.submit_job()
+        #保存提交后的信息
+        self.info.submitted_result = CollectInfos.SUBMITTED_SUCCESSFULLY
+        self.info.status = CollectInfos.SUBMITTED
+        self.info.save()
+        test_job = TestJob(jobid=jobid, collect_infos=self.info)
+        test_job.save()
+        print("submit successfully")
     def start(self):
         self._parse_info()
     pass
