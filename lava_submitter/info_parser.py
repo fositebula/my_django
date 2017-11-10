@@ -3,6 +3,10 @@
 from job_collector.models import CollectInfos, TestJob
 from lava_submission.models import VerifyProjectInfo
 
+class Submitter(object):
+    def __init__(self):
+        pass
+
 class InfoParse(object):
     def __init__(self, source, reactor, info):
         self.reactor = reactor
@@ -10,10 +14,11 @@ class InfoParse(object):
         self.info = info
 
     def _parse_info(self):
-        if VerifyProjectInfo.objects.filter(
+        branch_project_info = VerifyProjectInfo.objects.filter(
             branch_project_info__branch_name=self.info.branch,
             branch_project_info__project_name=self.info.project
-        ).count() == 0:
+        )
+        if branch_project_info.count() == 0:
             self.info.filted = True
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info not in the submit white list!"
