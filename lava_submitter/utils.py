@@ -42,9 +42,9 @@ def decompress(file_path):
 
 def get_image(image_type, local_path):
     if os.path.exists(local_path + "/" + image_type + "-sign.img"):
-        return local_path + "/" + image_type + "-sign.img"
+        return "http://"+local_path + "/" + image_type + "-sign.img"
     elif os.path.exists(local_path + "/" + image_type + ".img"):
-        return local_path + "/" + image_type + ".img"
+        return "http://"+local_path + "/" + image_type + ".img"
     else:
         return None
 

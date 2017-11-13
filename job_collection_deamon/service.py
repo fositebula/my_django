@@ -69,7 +69,7 @@ class CollectorFactory(ServerFactory):
 
 def main():
     factory = CollectorFactory()
-    port = reactor.listenTCP(5000, factory, interface="10.0.70.71")
+    port = reactor.listenTCP(10000, factory, interface="10.0.70.31")
 
     reactor.run()
 

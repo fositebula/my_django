@@ -45,6 +45,8 @@ class CollectInfos(models.Model):
     bugid = models.CharField('bugid to gerrit', max_length=200)
     repository = models.CharField('code repository', max_length=100)
 
+    device_type = models.CharField('device type', max_length=50, default=None)
+
     from_verify_server_time =models.DateTimeField(auto_now=True)
     submit_time = models.DateTimeField(
         verbose_name=u"submit time",
@@ -99,4 +101,4 @@ class TestJob(models.Model):
     collect_infos = models.ForeignKey('CollectInfos')
 
     def __str__(self):
-        return "TestJob: %s"%jobid
+        return "TestJob: %s"%self.jobid

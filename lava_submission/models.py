@@ -56,7 +56,7 @@ class VerifyBranchType(models.Model):
         return "Branch type: %s"%self.name
 
 class DeviceType(models.Model):
-    name = models.CharField("Device Type", max_length=50)
+    name = models.CharField(verbose_name=u"Device Type", max_length=50)
     lava_server = models.ForeignKey('LavaServerInfo')
 
     def __str__(self):

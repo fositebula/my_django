@@ -1,4 +1,4 @@
-data_str = """
+data_str = u"""
 device_type: sp9850ka
 job_name: lava_test_job_from_ci
 timeouts:
@@ -39,8 +39,7 @@ actions:
     to: fastboot
     namespace: droid
     images:
-      boot:
-        url: file:///home/apuser/lavatest/boot-sp9850ka.img
+    -
     os: debian
 - boot:
     namespace: droid
@@ -82,30 +81,23 @@ import yaml
 
 class AndroidData(object):
     job_data = yaml.load(data_str)
-    def __init__(self, *args, **kwargs):
-        self.boot = kwargs['boot']
-        self.system = kwargs['system']
-        self.userdata = kwargs['userdata']
-        self.uboot = kwargs['u-boot']
-        self.tos = kwargs['tos']
-        self.device_type = kwargs['device_type']
-        self.job_name = kwargs['job_name']
+    def __init__(self, data, device_type, jobname = None):
+        self.data = data
+        self.device_type = device_type
 
     def _set_job_data(self):
-        if not self.device_type:
-            return None
         self.job_data['device_type'] = self.device_type
-        self.job_data['job_name'] = self.job_name
-        if self.boot:
-            self.job_data["actions"][2]['images'].append({"boot":{"url":self.boot}})
-        if self.system:
-            self.job_data["actions"][2]['images'].append({"system":{"url":self.system}})
-        if self.userdata:
-            self.job_data["actions"][2]['images'].append({"userdata":{"url":self.userdata}})
-        if self.uboot:
-            self.job_data["actions"][2]['images'].append({"uboot":{"url":self.uboot}})
-        if self.tos:
-            self.job_data["actions"][2]['images'].append({"tos":{"url":self.tos}})
+        print("android_data.py", self.job_data["actions"])
+        if self.data.has_key('boot'):
+            self.job_data["actions"][2]['deploy']['images'].append({"boot":{"url":self.data['boot']}})
+        if self.data.has_key('system'):
+            self.job_data["actions"][2]['images'].append({"system":{"url":self.data['system']}})
+        if self.data.has_key('userdata'):
+            self.job_data["actions"][2]['images'].append({"userdata":{"url":self.data['userdata']}})
+        if self.data.has_key('uboot'):
+            self.job_data["actions"][2]['images'].append({"uboot":{"url":self.data['uboot']}})
+        if self.data.has_key('tos'):
+            self.job_data["actions"][2]['images'].append({"tos":{"url":self.data['tos']}})
     def get_data_str(self):
         self._set_job_data()
         return yaml.dump(self.job_data)

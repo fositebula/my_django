@@ -36,7 +36,7 @@ def repository_to_image(repo_l):
 def get_images(repo_image_list, local_path):
     image_paths = {}
     for image_type in repo_image_list:
-        image_paths[image_type[0]] = get_image(image_type[1], local_path)
+        image_paths[image_type[0]] = get_image(image_type[1], local_path).encode('utf-8')
     return image_paths
 
 class Submitter(object):
@@ -44,7 +44,7 @@ class Submitter(object):
         self.lava_server_ip = branch_project_info.device_in_server.server_ip
         self.lava_server_user = branch_project_info.device_in_server.submit_user_name
         self.lava_server_token = branch_project_info.device_in_server.submit_user_token
-        self.device_type = branch_project_info.device_in_server.device_type
+        self.device_type = branch_project_info.device_type
         self.job_data = job_data
         pass
 
@@ -88,21 +88,27 @@ class InfoParse(object):
         f = download_image(url)
         path = decompress(f)
         repo_l = self.info.repository.split(",")
+        print(repo_l)
         repo_tl = repository_to_image(repo_l)
+        print(repo_tl)
         info_data = get_images(repo_tl, path)
+        print(info_data)
         #将测试信息合成yaml文件
-        android_data = AndroidData(info_data)
+        device_type = branch_project_info.device_type.name
+        android_data = AndroidData(info_data, device_type.encode('utf-8'))
         yaml_str = android_data.get_data_str()
+        print(yaml_str)
         #调用submit提交job
         submitter = Submitter(branch_project_info, yaml_str)
         jobid = submitter.submit_job()
         #保存提交后的信息
+        self.info.device_type = device_type
         self.info.submitted_result = CollectInfos.SUBMITTED_SUCCESSFULLY
         self.info.status = CollectInfos.SUBMITTED
         self.info.save()
         test_job = TestJob(jobid=jobid, collect_infos=self.info)
         test_job.save()
-        print("submit successfully")
+        print("submit successfully, jobid:%s"%jobid)
     def start(self):
         self._parse_info()
     pass
