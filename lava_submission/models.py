@@ -44,6 +44,7 @@ class VerifyProjectInfo(models.Model):
     device_in_server = models.ForeignKey(LavaServerInfo)
     modify_date = models.DateField(auto_now=True)
     branch_type = models.ForeignKey('VerifyBranchType')
+    repository = models.CharField('repository', max_length=200)
 
     def __str__(self):
         return "%s:%s" % (self.branch_project_info.branch_name, self.branch_project_info.project_name)

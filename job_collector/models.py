@@ -45,7 +45,7 @@ class CollectInfos(models.Model):
     bugid = models.CharField('bugid to gerrit', max_length=200)
     repository = models.CharField('code repository', max_length=100)
 
-    device_type = models.CharField('device type', max_length=50, default=None)
+    device_type = models.CharField('device type', max_length=50)
 
     from_verify_server_time =models.DateTimeField(auto_now=True)
     submit_time = models.DateTimeField(

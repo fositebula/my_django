@@ -1,10 +1,13 @@
 #coding=utf-8
 
+import os
 from job_collector.models import CollectInfos, TestJob
 from lava_submission.models import VerifyProjectInfo
 import xmlrpclib
-from lava_submitter.utils import get_image, download_image, decompress, get_image_url
+from lava_submitter.utils import download_image, decompress, get_image_url, get_image
 from lava_submitter.JobData.android_data import AndroidData
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def get_job_data(device_type, boot=None, system=None, userdata=None):
     job_data = AndroidData(device_type, boot=boot, system=system, userdata=userdata, job_name="lava_test_job")
@@ -20,24 +23,29 @@ def repository_to_image(repo_l):
     """
     image_name = []
     for repo in repo_l:
-        if repo == "sprdlinux4.4":
+        if "sprdlinux4.4" in repo:
             image_name.append(("boot", "boot"))
-        if repo == "sprduboot64_v201507":
+        if "sprduboot64_v201507" in repo:
             image_name.append(("uboot", "u-boot"))
-        if repo == "sprdchipram16"\
-                or repo == "sprdroid6.0_whale_dev":
+        if "sprdchipram16" in repo\
+                or "sprdroid6.0_whale_dev" in repo:
             image_name.append(("u-boot-spl-16k", "u-boot-spl-16k"))
-        if repo == "sprd_trusty":
+        if "sprd_trusty" in repo:
             image_name.append(("tos", "tos"))
-        if repo == "arm-trusted-firmware":
+        if "arm-trusted-firmware" in repo:
             image_name.append(("sml", "sml"))
+        if "sprdroid8.0_trunk" in repo:
+            image_name.append(("system", "system"))
     return tuple(image_name)
 
 def get_images(repo_image_list, local_path):
     image_paths = {}
     for image_type in repo_image_list:
         image_paths[image_type[0]] = get_image(image_type[1], local_path).encode('utf-8')
+    print(image_paths)
     return image_paths
+
+
 
 class Submitter(object):
     def __init__(self, branch_project_info, job_data):
@@ -73,13 +81,20 @@ class InfoParse(object):
                 branch_project_info__branch_name=self.info.branch,
                 branch_project_info__project_name=self.info.project
             )
+        except ObjectDoesNotExist:
             self.info.filted = True
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info not in the submit white list!"
             self.info.save()
-            print("submit failed")
-        except Exception as e:
-            print("Did not fond the white list. %s"%e.message)
+            print("Did not fond the white list")
+            return
+
+        if self.info.repository not in branch_project_info.repository:
+            self.info.filted = True
+            self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
+            self.info.submitted_fail_reason = "The info's repository not in the submit white's info repository!"
+            self.info.save()
+            print("It's repository do not in white list info's repository!")
             return
 
         #下载image文件

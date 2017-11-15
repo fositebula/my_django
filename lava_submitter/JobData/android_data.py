@@ -91,13 +91,13 @@ class AndroidData(object):
         if self.data.has_key('boot'):
             self.job_data["actions"][2]['deploy']['images'].append({"boot":{"url":self.data['boot']}})
         if self.data.has_key('system'):
-            self.job_data["actions"][2]['images'].append({"system":{"url":self.data['system']}})
+            self.job_data["actions"][2]['deploy']['images'].append({"system":{"url":self.data['system']}})
         if self.data.has_key('userdata'):
-            self.job_data["actions"][2]['images'].append({"userdata":{"url":self.data['userdata']}})
+            self.job_data["actions"][2]['deploy']['images'].append({"userdata":{"url":self.data['userdata']}})
         if self.data.has_key('uboot'):
-            self.job_data["actions"][2]['images'].append({"uboot":{"url":self.data['uboot']}})
+            self.job_data["actions"][2]['deploy']['images'].append({"uboot":{"url":self.data['uboot']}})
         if self.data.has_key('tos'):
-            self.job_data["actions"][2]['images'].append({"tos":{"url":self.data['tos']}})
+            self.job_data["actions"][2]['deploy']['images'].append({"tos":{"url":self.data['tos']}})
     def get_data_str(self):
         self._set_job_data()
         return yaml.dump(self.job_data)
@@ -105,4 +105,5 @@ class AndroidData(object):
 if __name__ == '__main__':
     data = yaml.load(data_str)
     print(data)
+    print(yaml.dump(data))
 

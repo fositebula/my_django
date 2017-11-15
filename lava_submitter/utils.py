@@ -42,12 +42,11 @@ def decompress(file_path):
 
 def get_image(image_type, local_path):
     if os.path.exists(local_path + "/" + image_type + "-sign.img"):
-        return "http://"+local_path + "/" + image_type + "-sign.img"
+        return "http://10.0.70.63"+local_path + "/" + image_type + "-sign.img"
     elif os.path.exists(local_path + "/" + image_type + ".img"):
-        return "http://"+local_path + "/" + image_type + ".img"
+        return "http://10.0.70.63"+local_path + "/" + image_type + ".img"
     else:
         return None
-
 
 if __name__ == '__main__':
     url = get_image_url("sprdroid7.0_trunk_k44", "sp9850kh_1h10_smtcmcc-userdebug-native",
