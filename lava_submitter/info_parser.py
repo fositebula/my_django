@@ -90,6 +90,7 @@ class InfoParse(object):
             return
 
         if self.info.repository not in branch_project_info.repository:
+            self.info.verify_project_info = branch_project_info
             self.info.filted = True
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info's repository not in the submit white's info repository!"
@@ -98,6 +99,7 @@ class InfoParse(object):
             return
 
         #下载image文件
+        print("123",branch_project_info)
         url = get_image_url(self.info.branch, self.info.project, self.info.verify_url)
         print(url)
         f = download_image(url)
@@ -117,6 +119,7 @@ class InfoParse(object):
         submitter = Submitter(branch_project_info, yaml_str)
         jobid = submitter.submit_job()
         #保存提交后的信息
+        self.info.verify_project_info = branch_project_info
         self.info.device_type = device_type
         self.info.submitted_result = CollectInfos.SUBMITTED_SUCCESSFULLY
         self.info.status = CollectInfos.SUBMITTED

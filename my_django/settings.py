@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'model_study',
     'lava_submission',
     'job_collector',
+    'LAVA_job_check',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = '10.0.1.200'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'lava@spreadtrum.com'
+EMAIL_HOST_PASSWORD = '123@ABab'
+DEFAULT_FROM_EMAIL = 'LAVA <lava@spreadtrum.com>'

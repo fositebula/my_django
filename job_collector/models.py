@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from lava_submission.models import VerifyProjectInfo
 
 # Create your models here.
 class CollectInfos(models.Model):
@@ -26,6 +27,10 @@ class CollectInfos(models.Model):
         (SUBMITTED_SUCCESSFULLY, "Submitted successfully"),
         (SUBMITTED_FAILED, "Submitted failed"),
     )
+
+    LAST_JOB_NO_STATUS = 0
+    LAST_JOB_INCOMPLETE = 1
+    LAST_JOB_COMPLETE = 2
 
     branch = models.CharField('branch', max_length=50)
     project = models.CharField('project', max_length=50)
@@ -75,30 +80,35 @@ class CollectInfos(models.Model):
         max_length=100,
     )
 
+    verify_project_info = models.ForeignKey(VerifyProjectInfo, null=True)
+    resubmit_count = models.IntegerField(verbose_name=r'resubmit count', default=1)
+    last_job_status = models.IntegerField(verbose_name=u'last lava job status', default=LAST_JOB_NO_STATUS)
+
     def __str__(self):
         return "%s---%s---%s---%s"%(self.buildid, self.branch, self.project, self.gerrit_id)
 
 class TestJob(models.Model):
-
-    COMPLETE = 0
-    INCOMPLETE = 1
-
-    JOB_STATUS_CHOICE = (
-        (COMPLETE, "complete"),
-        (INCOMPLETE, "incomplete"),
-    )
+    #['Submitted' | 'Running' | 'Complete' | 'Incomplete' | 'Canceled' | 'Canceling']
 
     jobid = models.CharField(verbose_name='jobid', max_length=10, default=None)
-    job_status = models.IntegerField(
+    job_status = models.CharField(
         verbose_name='job status',
-        default=COMPLETE,
-        choices=JOB_STATUS_CHOICE
+        default="Submitted",
+        max_length=50
     )
     testcase = models.CharField(
-        help_text=u"formate ${casename}:${result}",
+        help_text=u"formate ${casename},${casename}",
         verbose_name='buildid', max_length=200, default="default"
     )
-    collect_infos = models.ForeignKey('CollectInfos')
+    testcase_result = models.CharField(
+        help_text=u"formate ${casename},${result}",
+        verbose_name=u"testcase result", max_length=200, default="default"
+    )
+    submitted_time = models.DateTimeField(verbose_name='submitted time', auto_now=True)
+    end_time = models.DateTimeField(verbose_name='end time', null=True)
+
+    collect_infos = models.ForeignKey('CollectInfos', null=True)
+    check_or_not = models.BooleanField(verbose_name='Check job or not', default=True)
 
     def __str__(self):
         return "TestJob: %s"%self.jobid
