@@ -18,7 +18,7 @@ import re
 
 import xmlrpclib
 
-def get_lava_servers():
+def get_lava_servers(info):
     server_infos = LavaServerInfo.objects.all()
     servers = []
     print ("http://%s:%s@%s/RPC2" % (info.submit_user_name
@@ -66,19 +66,21 @@ def get_branch_project_info_from_jenkins():
         Http404(e.message)
 
 def db_save_branch_project_infos(infos):
-
     try:
         for branch_info in infos.keys():
             for p_info in infos[branch_info]:
                 try:
                    q_set = BranchProjectInfo.objects.filter(Q(branch_name=branch_info)
                                                   &Q(project_name=p_info))
+                   print('q_set.count()', q_set.count())
                    if q_set.count() == 0:
+                        print('save begin')
                         t_info = BranchProjectInfo(branch_name=branch_info, project_name=p_info)
                         t_info.save()
+                        print('save end')
 
                 except ObjectDoesNotExist:
-                        Http404(e.message)
+                        Http404('Do not exist')
     except Exception as e:
         Http404(e.message)
 
@@ -142,7 +144,7 @@ def save_info_iterm(request):
             form.save()
             return HttpResponseRedirect(reverse('lava_submission:submission_index'))
         else:
-            branch_type = VerifyBranchType.objects.get(pk=2)
+            branch_type = VerifyBranchType.objects.get(pk=1)
             info = VerifyProjectInfo(branch_type=branch_type)
             form = ProjectInfoFrom(request.POST, instance=info)
             form.save()

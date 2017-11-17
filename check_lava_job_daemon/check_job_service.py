@@ -1,3 +1,4 @@
+#coding=utf-8
 import os,django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django.settings")
 django.setup()
@@ -9,9 +10,6 @@ import xmlrpclib
 import datetime
 from twisted.application.service import Service
 from twisted.internet.task import LoopingCall
-from django.utils import timezone
-
-from lava_submitter.info_parser import InfoParse
 from check_lava_job_daemon.db_job_source import DatabaseJobIDSource, catchall_errback
 from job_collector.models import CollectInfos, TestJob
 from django.db.models import Q
@@ -46,7 +44,7 @@ class JobCheck(object):
                                             )
 
         if infos.count() != 0:
-            #gerrit -1
+            #gerrit -1,如果提交的job中有一个job经过两次提交后还是incompolete，就给gerrit -1
             print("gerrit -1")
             return
 
@@ -57,7 +55,7 @@ class JobCheck(object):
         #print(infos.count(), ":", infos[0].project_num)
         if infos.count() != 0:
             if infos.count() == int(infos[0].project_num):
-                #gerrit +1
+                #gerrit +1,如果提交的job都是complete就给gerrit +1
                 print("gerrit +1")
                 return
         print("some jobs not complete")
@@ -67,7 +65,6 @@ class JobCheck(object):
     def start(self):
         self._get_server()
         #{'job_status': 'Complete', 'job_id': 200, 'bundle_sha1': ''}
-        rejob_flag = 0
         job_status = self.server.scheduler.job_status(self.job.jobid)
         print(job_status)
         if job_status['job_status'] == 'Incomplete':
@@ -75,8 +72,7 @@ class JobCheck(object):
             if self.job.collect_infos.resubmit_count < RESUBMIT_MAX:
                 re_jobid = self.server.scheduler.resubmit_job(self.job.jobid)
                 self.job.collect_infos.resubmit_count += 1
-                rejob = TestJob(jobid=re_jobid, collect_infos=self.job.collect_infos).save()
-                rejob_flag = 1
+                TestJob(jobid=re_jobid, collect_infos=self.job.collect_infos).save()
             elif self.job.collect_infos.resubmit_count == RESUBMIT_MAX:
                 self.job.collect_infos.last_job_status = CollectInfos.LAST_JOB_INCOMPLETE
             self.job.collect_infos.save()
@@ -94,8 +90,6 @@ class JobCheck(object):
         else:
             get_case()
         self._check_build_infos_status(self.job)
-        # if rejob_flag:
-        #     rejob.save()
 
 class JobIDQueue(Service):
 

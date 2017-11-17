@@ -16,7 +16,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 class ProjectInfoFrom(forms.ModelForm):
     class Meta:
         model = VerifyProjectInfo
-        fields = ["branch_project_info", "repository", "managers_mail", "task_type", "device_type",
+        fields = ["branch_project_info",  "managers_mail", "task_type", "device_type",
                   "stop_flag", "device_in_server"]
         error_messages = {
             NON_FIELD_ERRORS:{

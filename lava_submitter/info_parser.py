@@ -13,7 +13,7 @@ def get_job_data(device_type, boot=None, system=None, userdata=None):
     job_data = AndroidData(device_type, boot=boot, system=system, userdata=userdata, job_name="lava_test_job")
     return job_data.get_data_str
 
-def repository_to_image(repo_l):
+def repository_to_image(verify_project_info, repo_l):
     """
         sprdlinux4.4--------------------------->boot
         sprduboot64_v201507 ------------------->u-boot
@@ -22,30 +22,22 @@ def repository_to_image(repo_l):
         arm-trusted-firmware------------------->sml
     """
     image_name = []
+    ch_repos = verify_project_info.repositorycheckitem_set.all()
+    print(ch_repos)
+    print(repo_l)
     for repo in repo_l:
-        if "sprdlinux4.4" in repo:
-            image_name.append(("boot", "boot"))
-        if "sprduboot64_v201507" in repo:
-            image_name.append(("uboot", "u-boot"))
-        if "sprdchipram16" in repo\
-                or "sprdroid6.0_whale_dev" in repo:
-            image_name.append(("u-boot-spl-16k", "u-boot-spl-16k"))
-        if "sprd_trusty" in repo:
-            image_name.append(("tos", "tos"))
-        if "arm-trusted-firmware" in repo:
-            image_name.append(("sml", "sml"))
-        if "sprdroid8.0_trunk" in repo:
-            image_name.append(("system", "system"))
-    return tuple(image_name)
+        for ch_repo in ch_repos:
+            if ch_repo.repo_name in repo:
+                image_name.append(ch_repo.image_name)
+    return image_name
+
 
 def get_images(repo_image_list, local_path):
     image_paths = {}
     for image_type in repo_image_list:
-        image_paths[image_type[0]] = get_image(image_type[1], local_path).encode('utf-8')
+        image_paths[image_type] = get_image(image_type, local_path).encode('utf-8')
     print(image_paths)
     return image_paths
-
-
 
 class Submitter(object):
     def __init__(self, branch_project_info, job_data):
@@ -89,7 +81,12 @@ class InfoParse(object):
             print("Did not fond the white list")
             return
 
-        if self.info.repository not in branch_project_info.repository:
+        repo_l = self.info.repository.split(",")
+        print(repo_l)
+        repo_l = list(set(repo_l))
+        repo_tl = repository_to_image(branch_project_info, repo_l)
+        print("repo list:", repo_tl)
+        if len(repo_tl) == 0:
             self.info.verify_project_info = branch_project_info
             self.info.filted = True
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
@@ -104,10 +101,7 @@ class InfoParse(object):
         print(url)
         f = download_image(url)
         path = decompress(f)
-        repo_l = self.info.repository.split(",")
-        print(repo_l)
-        repo_tl = repository_to_image(repo_l)
-        print(repo_tl)
+
         info_data = get_images(repo_tl, path)
         print(info_data)
         #将测试信息合成yaml文件
