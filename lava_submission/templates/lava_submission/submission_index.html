@@ -1,4 +1,22 @@
 {% extends 'lava_submission/base.html' %}
+<script type="text/javascript" language="JavaScript">
+function add_info() {
+}
+function get_branch(info) {
+    var input = document.getElementsByName('branch');
+    input.value = "321";
+    var info = info;
+    $.ajax({
+        type:"post",
+        url:{% url 'lava_submission.views.get_branch' %},
+        dataType:"json",
+        success:function (data) {
+            var input = document.getElementsByName('branch');
+            input.value = "321";
+        }
+    })
+}
+</script>
 {% block content %}
     <div>
     <form action="search_info/result/" method="post">
@@ -8,7 +26,7 @@
         <input type="submit" value="search">
     </form>
     </div>
-    <table border="1">
+    <table border="1" id="verify_project_info_list">
         <tr>
             <td>id</td>
             <td>branch</td>
@@ -44,31 +62,23 @@
             </tr>
         {% endfor %}
     {% endif %}
-            <tr>
+            <tr id="new_row">
                 <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <form action="addInfo/" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="add">
-{#                        <select name="branch_type" required id="id_branch_type">#}
-{#                            <option value>-------------</option>#}
-{#                            {% if branch_types.count != 0 %}#}
-{#                                {% for type in branch_types %}#}
-{#                                <option value="{{ type.id }}">{{ type.name }}</option>#}
-{#                                {% endfor %}#}
-{#                            {% endif %}#}
-{#                        </select>#}
-                    </form>
-                </td>
+                <td><input type="text" name="branch" onchange="get_branch"></td>
+                <td><input type="text" name="project"></td>
+                <td><input type="text" name="repository"></td>
+                <td><input type="email" name="email"></td>
+                <td><select id="task_type"></select></td>
+                <td><select id="device_type"></select></td>
+                <td><input type="text" name="stop_flag"></td>
+                <td><select id="server_info"></select></td>
+                <td><input type="datetime" name="modify_time"></td>
+                <td><input type="button" value="add" onclick="add_info"> </td>
+{#                    <form action="addInfo/" method="post">#}
+{#                        {% csrf_token %}#}
+{#                        <input type="submit" value="add">#}
+{#                    </form>#}
+{#                </td>#}
             </tr>
     </table>
 {% endblock %}
