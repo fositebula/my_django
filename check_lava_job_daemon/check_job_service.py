@@ -1,12 +1,19 @@
 #coding=utf-8
 import os,django
+from os.path import join,dirname,abspath
+import sys
+
+PROJECT_DIR = dirname(dirname(abspath(__file__)))
+sys.path.insert(0,PROJECT_DIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django.settings")
 django.setup()
 import logging
 logging.basicConfig()
 
 import time
-import xmlrpclib
+import platform
+PYTHON_VERSION = platform.python_version()
+
 import datetime
 from twisted.application.service import Service
 from twisted.internet.task import LoopingCall
@@ -20,7 +27,13 @@ def get_lava_server(dbjob):
     username = dbjob.collect_infos.verify_project_info.device_in_server.submit_user_name
     hostname = dbjob.collect_infos.verify_project_info.device_in_server.server_hostname
     token = dbjob.collect_infos.verify_project_info.device_in_server.submit_user_token
-    server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (username, token, hostname))
+
+    if PYTHON_VERSION.startswith('2'):
+        import xmlrpclib
+        server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (username, token, hostname))
+    else:
+        import xmlrpc.client
+        server = xmlrpc.client.ServerProxy("http://%s:%s@%s/RPC2" % (username, token, hostname))
     return server
 
 def get_case():
@@ -41,6 +54,7 @@ class JobCheck(object):
         infos = CollectInfos.objects.filter(Q(buildid=buildid)
                                             & Q(last_job_status=CollectInfos.LAST_JOB_INCOMPLETE)
                                             & Q(filted=False)
+                                            & Q(buildid_from_where=CollectInfos.BUILDID_FROM_VERIFY)
                                             )
 
         if infos.count() != 0:
@@ -51,10 +65,16 @@ class JobCheck(object):
         infos = CollectInfos.objects.filter(Q(buildid=buildid)
                                             & Q(last_job_status=CollectInfos.LAST_JOB_COMPLETE)
                                             & Q(filted=False)
+                                            & Q(buildid_from_where=CollectInfos.BUILDID_FROM_VERIFY)
+                                            )
+
+        infos_filted = CollectInfos.objects.filter(Q(buildid=buildid)
+                                            & Q(filted=True)
+                                            & Q(buildid_from_where=CollectInfos.BUILDID_FROM_VERIFY)
                                             )
         #print(infos.count(), ":", infos[0].project_num)
         if infos.count() != 0:
-            if infos.count() == int(infos[0].project_num):
+            if infos.count() + infos_filted.count()  == int(infos[0].project_num):
                 #gerrit +1,如果提交的job都是complete就给gerrit +1
                 print("gerrit +1")
                 return
@@ -84,9 +104,19 @@ class JobCheck(object):
             self.job.save()
         elif job_status['job_status'] == 'Complete':
             self.job.check_or_not = False
+            self.job.end_time = datetime.datetime.fromtimestamp(
+                time.mktime(self.server.scheduler.job_details(self.job.jobid)['end_time'].timetuple())
+                            )
             self.job.collect_infos.last_job_status = CollectInfos.LAST_JOB_COMPLETE
-            self.job.collect_infos.last_job_status = True
             self.job.collect_infos.save()
+            self.job.save()
+	
+        elif job_status['job_status'] == 'Canceled':
+            self.job.check_or_not = False
+
+            self.job.end_time = datetime.datetime.now()
+            get_case_result(self.job, self.server.scheduler.job_details(self.job.jobid))
+            self.job.save()
         else:
             get_case()
         self._check_build_infos_status(self.job)

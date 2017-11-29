@@ -26,11 +26,14 @@ class CollcetorClientFactory(ClientFactory):
         from twisted.internet import reactor
         reactor.stop()
 
+def stop(re):
+    re.stop()
 
 def main(data):
     factory = CollcetorClientFactory(data)
     from twisted.internet import reactor
     reactor.connectTCP("10.0.70.71", 5000, factory)
+    reactor.callLater(5, stop, reactor)
     reactor.run()
 
 JOB_INFO_JSON = """
@@ -50,6 +53,7 @@ JOB_INFO_JSON = """
     "test_description":"${test_description}",
     "project_num":"${project_num}",
     "test_task_type":"${test_task_type}",
+    "buildid_from_where":0}
 }
 """
 
@@ -92,7 +96,8 @@ if __name__ == '__main__':
          "port":port_parm, "compile_user":compile_user_parm, "module":module_parm,
          "testcase":test_cases_parm, "manual_testcase":manual_test_case_parm,
          "phone_number":phone_number_parm, "test_description":test_description_parm,
-         "project_num":project_num, "test_task_type":test_task_type_parm}
+         "project_num":project_num, "test_task_type":test_task_type_parm},
+         "buildid_from_where":0}
     )
     main(data)
     pass

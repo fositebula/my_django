@@ -6,6 +6,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django.settings")# project_n
 django.setup()
 
 import logging
+import logging.handlers
 import signal
 from django.db import connection
 from django.db import transaction
@@ -23,7 +24,12 @@ from zope.interface import (
     Interface,
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__+'.check_result')
+fmt = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler = logging.handlers.RotatingFileHandler('log/check_result.log', maxBytes=1024*1024, backupCount=5)
+handler.setFormatter(fmt=fmt)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 def catchall_errback(logger):
     def eb(failure):
@@ -32,15 +38,15 @@ def catchall_errback(logger):
             failure.getTraceback())
     return eb
 
-
-class IInfoSource(Interface):
-
-    def getInfoList():
-        """Get the list of collected information from verify server."""
-
-
-    def infoSubmitted(submitted_status):
-        """Mark the information submitted."""
+#
+# class IInfoSource(Interface):
+#
+#     def getInfoList():
+#         """Get the list of collected information from verify server."""
+#
+#
+#     def infoSubmitted(submitted_status):
+#         """Mark the information submitted."""
 
 
 MAX_RETRIES = 2
@@ -59,7 +65,7 @@ except ImportError:
 class DatabaseJobIDSource(object):
     """ Deprecated """
 
-    implements(IInfoSource)
+    # implements(IInfoSource)
 
     def __init__(self):
         self.logger = logging.getLogger(__name__ + '.DatabaseInfoSource')
@@ -75,7 +81,7 @@ class DatabaseJobIDSource(object):
                     assert connection.connection is not None
                 try:
                     return func(*args, **kw)
-                except (DatabaseError, OperationalError, InterfaceError), error:
+                except (DatabaseError, OperationalError, InterfaceError) as error:
                     message = str(error)
                     if message == 'connection already closed' or message.startswith(
                             'terminating connection due to administrator command') or message.startswith(
@@ -142,6 +148,7 @@ class DatabaseJobIDSource(object):
         if not connection.in_atomic_block:
             self._commit_transaction(src='getInfosList_impl')
         print("###", my_infos)
+        logger.info(my_infos)
         return my_infos
 
     def getJobList(self):

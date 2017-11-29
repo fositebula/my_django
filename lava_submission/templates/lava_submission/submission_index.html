@@ -63,22 +63,32 @@ function get_branch(info) {
         {% endfor %}
     {% endif %}
             <tr id="new_row">
-                <td></td>
-                <td><input type="text" name="branch" onchange="get_branch"></td>
-                <td><input type="text" name="project"></td>
-                <td><input type="text" name="repository"></td>
-                <td><input type="email" name="email"></td>
-                <td><select id="task_type"></select></td>
-                <td><select id="device_type"></select></td>
-                <td><input type="text" name="stop_flag"></td>
-                <td><select id="server_info"></select></td>
-                <td><input type="datetime" name="modify_time"></td>
-                <td><input type="button" value="add" onclick="add_info"> </td>
-{#                    <form action="addInfo/" method="post">#}
-{#                        {% csrf_token %}#}
-{#                        <input type="submit" value="add">#}
-{#                    </form>#}
-{#                </td>#}
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+{#                <td><input type="text" name="branch" onchange="get_branch"></td>#}
+{#                <td><input type="text" name="project"></td>#}
+{#                <td><input type="text" name="repository"></td>#}
+{#                <td><input type="email" name="email"></td>#}
+{#                <td><select id="task_type"></select></td>#}
+{#                <td><select id="device_type"></select></td>#}
+{#                <td><input type="text" name="stop_flag"></td>#}
+{#                <td><select id="server_info"></select></td>#}
+{#                <td><input type="datetime" name="modify_time"></td>#}
+{#                <td><input type="button" value="add" onclick="add_info"> </td>#}
+                <td>
+                    <form action="addInfo/" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="add">
+                    </form>
+                </td>
             </tr>
     </table>
 {% endblock %}
