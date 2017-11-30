@@ -30,6 +30,22 @@ logger = logging.getLogger(__name__+'.job_collector')
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
+from django.db import connection
+from django.db import transaction
+
+MAX_RETRIES = 3
+
+def _commit_transaction(src=None):
+    if connection.in_atomic_block:
+        return
+    for retry in range(MAX_RETRIES):
+        try:
+            transaction.commit()
+            logger.debug('%s transaction committed', src)
+            break
+        except Exception as err:
+            logger.warn('retrying transaction %s', err)
+            continue
 
 JOB_INFO_JSON = """
 {
@@ -123,6 +139,7 @@ def save_data(data):
         buildid_from_where=received_data['buildid_from_where']
     )
     db_data.save()
+    _commit_transaction(src='save_data')
 
 class JobCollcetorProtocol(Protocol):
     def connectionMade(self):

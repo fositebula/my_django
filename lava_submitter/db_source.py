@@ -153,6 +153,7 @@ class DatabaseJobSource(object):
             info.submit_time = timezone.now()
             info.status = CollectInfos.SUBMITTED
             info.save()
+            self._commit_transaction(src='startSubmit_impl')
         return infos
 
     def startedSubmit(self, info):

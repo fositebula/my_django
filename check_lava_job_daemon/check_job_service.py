@@ -7,8 +7,8 @@ PROJECT_DIR = dirname(dirname(abspath(__file__)))
 sys.path.insert(0,PROJECT_DIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django.settings")
 django.setup()
-import logging
-logging.basicConfig()
+
+from .db_job_source import logger
 
 import time
 import platform
@@ -21,7 +21,24 @@ from check_lava_job_daemon.db_job_source import DatabaseJobIDSource, catchall_er
 from job_collector.models import CollectInfos, TestJob
 from django.db.models import Q
 
+from django.db import connection
+from django.db import transaction
+
+
 RESUBMIT_MAX = 2
+MAX_RETRIES = 3
+
+def _commit_transaction(src=None):
+    if connection.in_atomic_block:
+        return
+    for retry in range(MAX_RETRIES):
+        try:
+            transaction.commit()
+            logger.debug('%s transaction committed', src)
+            break
+        except Exception as err:
+            logger.warn('retrying transaction %s', err)
+            continue
 
 def get_lava_server(dbjob):
     username = dbjob.collect_infos.verify_project_info.device_in_server.submit_user_name
@@ -93,15 +110,18 @@ class JobCheck(object):
                 re_jobid = self.server.scheduler.resubmit_job(self.job.jobid)
                 self.job.collect_infos.resubmit_count += 1
                 TestJob(jobid=re_jobid, collect_infos=self.job.collect_infos).save()
+                _commit_transaction(src='resubmit job %s'%re_jobid)
             elif self.job.collect_infos.resubmit_count == RESUBMIT_MAX:
                 self.job.collect_infos.last_job_status = CollectInfos.LAST_JOB_INCOMPLETE
             self.job.collect_infos.save()
+            _commit_transaction(src='refresh collect info status')
 
             self.job.end_time = datetime.datetime.fromtimestamp(
                 time.mktime(self.server.scheduler.job_details(self.job.jobid)['end_time'].timetuple())
                             )
             get_case_result(self.job, self.server.scheduler.job_details(self.job.jobid))
             self.job.save()
+            _commit_transaction(src='job save')
         elif job_status['job_status'] == 'Complete':
             self.job.check_or_not = False
             self.job.end_time = datetime.datetime.fromtimestamp(
@@ -109,7 +129,9 @@ class JobCheck(object):
                             )
             self.job.collect_infos.last_job_status = CollectInfos.LAST_JOB_COMPLETE
             self.job.collect_infos.save()
+            _commit_transaction(src='info save')
             self.job.save()
+            _commit_transaction(src='job save')
 	
         elif job_status['job_status'] == 'Canceled':
             self.job.check_or_not = False
@@ -117,6 +139,7 @@ class JobCheck(object):
             self.job.end_time = datetime.datetime.now()
             get_case_result(self.job, self.server.scheduler.job_details(self.job.jobid))
             self.job.save()
+            _commit_transaction(src='job save')
         else:
             get_case()
         self._check_build_infos_status(self.job)

@@ -7,7 +7,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b6768d84-22a7-4ee5-a3d1-098e47df94da" name="django" comment="删除lava_submission_bak">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/my_django.iml" afterPath="$PROJECT_DIR$/.idea/my_django.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/check_lava_job_daemon/check_job_service.py" afterPath="$PROJECT_DIR$/check_lava_job_daemon/check_job_service.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/job_collection_deamon/service.py" afterPath="$PROJECT_DIR$/job_collection_deamon/service.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lava_submitter/db_source.py" afterPath="$PROJECT_DIR$/lava_submitter/db_source.py" />
     </list>
     <list id="3651af79-4c01-4cf9-b35a-5d161cda8ad5" name="Default" comment="study django from blog" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,7 +35,70 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="db_job_source.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/check_lava_job_daemon/db_job_source.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1886">
+              <caret line="9" column="13" lean-forward="true" selection-start-line="9" selection-start-column="13" selection-end-line="12" selection-end-column="41" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="check_job_service.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/check_lava_job_daemon/check_job_service.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="46">
+              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="24" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="service.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/job_collection_deamon/service.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="123">
+              <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="47" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="submitter_service.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lava_submitter/submitter_service.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#16#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="db_source.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lava_submitter/db_source.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1064">
+              <caret line="155" column="58" lean-forward="false" selection-start-line="155" selection-start-column="58" selection-end-line="155" selection-end-column="58" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="info_parser.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lava_submitter/info_parser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="31">
+              <caret line="151" column="27" lean-forward="false" selection-start-line="151" selection-start-column="27" selection-end-line="151" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -43,9 +111,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>render</find>
-      <find>removeNode</find>
-      <find>listRmXmlNode</find>
       <find>xmlParseFile</find>
       <find>node</find>
       <find>xmlNewNode</find>
@@ -73,6 +138,9 @@
       <find>db_save_branch_project_infos</find>
       <find>DeviceType</find>
       <find>branch_type</find>
+      <find>DatabaseError</find>
+      <find>RESUBMIT_MAX</find>
+      <find>save</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/lava_submission</dir>
@@ -130,6 +198,12 @@
         <option value="$PROJECT_DIR$/lava_submission/admin.py" />
         <option value="$PROJECT_DIR$/lava_submission/views.py" />
         <option value="$PROJECT_DIR$/lava_submission/models.py" />
+        <option value="$PROJECT_DIR$/check_lava_job_daemon/db_job_source.py" />
+        <option value="$PROJECT_DIR$/check_lava_job_daemon/check_job_service.py" />
+        <option value="$PROJECT_DIR$/job_collection_deamon/service.py" />
+        <option value="$PROJECT_DIR$/lava_submitter/submitter_service.py" />
+        <option value="$PROJECT_DIR$/lava_submitter/db_source.py" />
+        <option value="$PROJECT_DIR$/lava_submitter/info_parser.py" />
       </list>
     </option>
   </component>
@@ -169,6 +243,21 @@
             <path>
               <item name="my_django" type="b2602c69:ProjectViewProjectNode" />
               <item name="my_django" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="my_django" type="b2602c69:ProjectViewProjectNode" />
+              <item name="my_django" type="462c0819:PsiDirectoryNode" />
+              <item name="check_lava_job_daemon" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="my_django" type="b2602c69:ProjectViewProjectNode" />
+              <item name="my_django" type="462c0819:PsiDirectoryNode" />
+              <item name="job_collection_deamon" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="my_django" type="b2602c69:ProjectViewProjectNode" />
+              <item name="my_django" type="462c0819:PsiDirectoryNode" />
+              <item name="lava_submitter" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -660,7 +749,14 @@
       <option name="project" value="LOCAL" />
       <updated>1512028058119</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="增加了数据库save后重试机制">
+      <created>1512029977846</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1512029977846</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -731,7 +827,8 @@
     <MESSAGE value="django-study" />
     <MESSAGE value="增加刷新功能" />
     <MESSAGE value="删除lava_submission_bak" />
-    <option name="LAST_COMMIT_MESSAGE" value="删除lava_submission_bak" />
+    <MESSAGE value="增加了数据库save后重试机制" />
+    <option name="LAST_COMMIT_MESSAGE" value="增加了数据库save后重试机制" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -748,12 +845,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/polls/static/polls/images/backgroud.png" />
-    <entry file="file://$PROJECT_DIR$/blog/template/blog/base.html" />
-    <entry file="file://$PROJECT_DIR$/model_study/apps.py" />
-    <entry file="file://$PROJECT_DIR$/polls/apps.py" />
-    <entry file="file://$PROJECT_DIR$/model_study/models.py" />
-    <entry file="file://$PROJECT_DIR$/lava_submision/models.py" />
     <entry file="file://$PROJECT_DIR$/lava_submision/urls.py" />
     <entry file="file://$PROJECT_DIR$/lava_submission/static/lava_submission/css/bootstrap-3.3.7.css" />
     <entry file="file://$PROJECT_DIR$/lava_submission/static/lava_submission/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
@@ -834,7 +925,7 @@
         <state relative-caret-position="828">
           <caret line="38" column="61" lean-forward="false" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
           <folding>
-            <element signature="e#24#63#0" expanded="true" />
+            <element signature="e#24#63#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -852,8 +943,58 @@
         <state relative-caret-position="844">
           <caret line="154" column="25" lean-forward="false" selection-start-line="154" selection-start-column="25" selection-end-line="154" selection-end-column="25" />
           <folding>
-            <element signature="e#24#63#0" expanded="true" />
+            <element signature="e#24#63#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/check_lava_job_daemon/db_job_source.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1886">
+          <caret line="9" column="13" lean-forward="true" selection-start-line="9" selection-start-column="13" selection-end-line="12" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/check_lava_job_daemon/check_job_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="24" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/job_collection_deamon/service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="47" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lava_submitter/submitter_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lava_submitter/db_source.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1064">
+          <caret line="155" column="58" lean-forward="false" selection-start-line="155" selection-start-column="58" selection-end-line="155" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lava_submitter/info_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31">
+          <caret line="151" column="27" lean-forward="false" selection-start-line="151" selection-start-column="27" selection-end-line="151" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
