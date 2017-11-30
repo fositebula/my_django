@@ -6,85 +6,7 @@
     </enabled-run-configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6768d84-22a7-4ee5-a3d1-098e47df94da" name="django" comment="删除lava">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LAVA_job_check/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LAVA_job_check/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LAVA_job_check/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LAVA_job_check/models.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LAVA_job_check/templates/LAVA_job_check/email_content_job_complete.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LAVA_job_check/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/LAVA_job_check/views.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/models.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/templates/blog/base.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/templates/blog/year_archive.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/urls.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/blog/views.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/check_lava_job_daemon/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/check_lava_job_daemon/gerrit_score_strategy.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/check_lava_job_result/send_mail.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/check_lava_job_result/template/email_content_job_complete.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/job_collector/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/job_collector/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/job_collector/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/job_collector/migrations/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/job_collector/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/job_collector/views.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/form.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/migrations/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/templates/lava_submission/add_project_info.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/templates/lava_submission/base.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/templates/lava_submission/modify_project_info.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/templates/lava_submission/search_info_results.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission/urls.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/form.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/migrations/0001_initial.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/migrations/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/models.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/templates/lava_submission/add_project_info.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/templates/lava_submission/base.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/templates/lava_submission/modify_project_info.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/templates/lava_submission/search_info_results.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/templates/lava_submission/submission_index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/urls.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submission_bak/views.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submitter/JobData/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lava_submitter/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/model_study/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/model_study/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/model_study/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/model_study/models.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/model_study/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/model_study/views.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/my_django/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/my_django/urls.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/models.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/static/polls/style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/templates/polls/base.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/templates/polls/details.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/templates/polls/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/templates/polls/results.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/urls.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/polls/views.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/my_django.iml" afterPath="$PROJECT_DIR$/.idea/my_django.iml" />
+    <list default="true" id="b6768d84-22a7-4ee5-a3d1-098e47df94da" name="django" comment="删除lava_submission_bak">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="3651af79-4c01-4cf9-b35a-5d161cda8ad5" name="Default" comment="study django from blog" />
@@ -731,7 +653,14 @@
       <option name="project" value="LOCAL" />
       <updated>1509539793054</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="删除lava_submission_bak">
+      <created>1512028058119</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1512028058119</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -773,7 +702,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39076924" sideWeight="0.5040431" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.10871795" sideWeight="0.49595687" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10782241" sideWeight="0.49595687" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20923077" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51897436" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -801,7 +730,8 @@
     <MESSAGE value="study django from blog" />
     <MESSAGE value="django-study" />
     <MESSAGE value="增加刷新功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加刷新功能" />
+    <MESSAGE value="删除lava_submission_bak" />
+    <option name="LAST_COMMIT_MESSAGE" value="删除lava_submission_bak" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
