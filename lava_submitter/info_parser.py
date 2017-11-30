@@ -28,6 +28,24 @@ logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
 
+from django.db import connection
+from django.db import transaction
+
+MAX_RETRIES = 3
+
+def _commit_transaction(src=None):
+    if connection.in_atomic_block:
+        return
+    for retry in range(MAX_RETRIES):
+        try:
+            transaction.commit()
+            logger.debug('%s transaction committed', src)
+            break
+        except Exception as err:
+            logger.warn('retrying transaction %s', err)
+            continue
+
+
 def get_job_data(device_type, boot=None, system=None, userdata=None):
     job_data = AndroidData(device_type, boot=boot, system=system, userdata=userdata, job_name="lava_test_job")
     return job_data.get_data_str
@@ -104,6 +122,7 @@ class InfoParse(object):
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info not in the submit white list!"
             self.info.save()
+            _commit_transaction(src='_parse_infoa')
             logger.debug("Did not fond the white list")
             return
 
@@ -118,6 +137,7 @@ class InfoParse(object):
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info's repository not in the submit white's info repository!"
             self.info.save()
+            _commit_transaction(src='_parse_infob')
             logger.debug("It's repository do not in white list info's repository!")
             return
 
@@ -145,8 +165,10 @@ class InfoParse(object):
         self.info.submitted_result = CollectInfos.SUBMITTED_SUCCESSFULLY
         self.info.status = CollectInfos.SUBMITTED
         self.info.save()
+        _commit_transaction(src='_parse_infoc')
         test_job = TestJob(jobid=jobid, collect_infos=self.info)
         test_job.save()
+        _commit_transaction(src='_parse_infod')
         logger.debug("submit successfully, jobid:%s"%jobid)
     def start(self):
         self._parse_info()
