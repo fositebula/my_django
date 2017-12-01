@@ -6,25 +6,17 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django.settings")# project_n
 django.setup()
 
 import logging
-import shutil
-import urlparse
 import signal
 from django.db import connection
 from django.db import transaction
 from django.db.utils import DatabaseError
 from django.utils import timezone
-import MySQLdb
-
-import simplejson
 
 from twisted.internet.threads import deferToThread  # pylint: disable=unused-import
 
-from zope.interface import implements
 
 from job_collector.models import CollectInfos
 
-import json
-from twisted.internet import defer
 
 from zope.interface import (
     implements,
@@ -41,14 +33,14 @@ def catchall_errback(logger):
     return eb
 
 
-class IInfoSource(Interface):
-
-    def getInfoList():
-        """Get the list of collected information from verify server."""
-
-
-    def infoSubmitted(submitted_status):
-        """Mark the information submitted."""
+# class IInfoSource(Interface):
+#
+#     def getInfoList():
+#         """Get the list of collected information from verify server."""
+#
+#
+#     def infoSubmitted(submitted_status):
+#         """Mark the information submitted."""
 
 
 MAX_RETRIES = 2
@@ -67,7 +59,7 @@ except ImportError:
 class DatabaseJobSource(object):
     """ Deprecated """
 
-    implements(IInfoSource)
+    # implements(IInfoSource)
 
     def __init__(self):
         self.logger = logging.getLogger(__name__ + '.DatabaseInfoSource')
@@ -83,7 +75,7 @@ class DatabaseJobSource(object):
                     assert connection.connection is not None
                 try:
                     return func(*args, **kw)
-                except (DatabaseError, OperationalError, InterfaceError), error:
+                except (DatabaseError, OperationalError, InterfaceError) as error:
                     message = str(error)
                     if message == 'connection already closed' or message.startswith(
                             'terminating connection due to administrator command') or message.startswith(
@@ -161,6 +153,7 @@ class DatabaseJobSource(object):
             info.submit_time = timezone.now()
             info.status = CollectInfos.SUBMITTED
             info.save()
+            self._commit_transaction(src='startSubmit_impl')
         return infos
 
     def startedSubmit(self, info):

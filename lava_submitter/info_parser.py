@@ -3,10 +3,29 @@
 import os
 from job_collector.models import CollectInfos, TestJob
 from lava_submission.models import VerifyProjectInfo
-import xmlrpclib
+import platform
+python_version = platform.python_version()
+if python_version.startswith('2.'):
+    import xmlrpclib
+    PYTHON_VERSION = 2
+elif python_version.startswith('3.'):
+    import xmlrpc.client
+    PYTHON_VERSION = 3
+
 from lava_submitter.utils import download_image, decompress, get_image_url, get_image
 from lava_submitter.JobData.android_data import AndroidData
 from django.core.exceptions import ObjectDoesNotExist
+
+
+import logging
+import logging.handlers
+
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler = logging.handlers.RotatingFileHandler("log/info_parser.log", maxBytes=1024*1024, backupCount=5)
+handler.setFormatter(fmt=formatter)
+logger = logging.getLogger(__name__+'.info_parser')
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 
 def get_job_data(device_type, boot=None, system=None, userdata=None):
@@ -23,8 +42,8 @@ def repository_to_image(verify_project_info, repo_l):
     """
     image_name = []
     ch_repos = verify_project_info.repositorycheckitem_set.all()
-    print(ch_repos)
-    print(repo_l)
+    logger.debug(ch_repos)
+    logger.debug(repo_l)
     for repo in repo_l:
         for ch_repo in ch_repos:
             if ch_repo.repo_name in repo:
@@ -35,8 +54,8 @@ def repository_to_image(verify_project_info, repo_l):
 def get_images(repo_image_list, local_path):
     image_paths = {}
     for image_type in repo_image_list:
-        image_paths[image_type] = get_image(image_type, local_path).encode('utf-8')
-    print(image_paths)
+        image_paths[image_type] = get_image(image_type, local_path)
+    logger.debug(image_paths)
     return image_paths
 
 class Submitter(object):
@@ -49,10 +68,17 @@ class Submitter(object):
         pass
 
     def _get_lava_server(self):
-        server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (
-            self.lava_server_user,
-            self.lava_server_token,
-            self.lava_server_ip))
+        if PYTHON_VERSION == 2:
+            server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (
+                self.lava_server_user,
+                self.lava_server_token,
+                self.lava_server_ip))
+        else:
+            server = xmlrpc.client.ServerProxy("http://%s:%s@%s/RPC2" % (
+                self.lava_server_user,
+                self.lava_server_token,
+                self.lava_server_ip))
+
         return server
 
     def submit_job(self):
@@ -78,37 +104,38 @@ class InfoParse(object):
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info not in the submit white list!"
             self.info.save()
-            print("Did not fond the white list")
+            logger.debug("Did not fond the white list")
             return
 
         repo_l = self.info.repository.split(",")
-        print(repo_l)
+        logger.debug(repo_l)
         repo_l = list(set(repo_l))
         repo_tl = repository_to_image(branch_project_info, repo_l)
-        print("repo list:", repo_tl)
+        logger.debug( repo_tl)
         if len(repo_tl) == 0:
             self.info.verify_project_info = branch_project_info
             self.info.filted = True
             self.info.submitted_result = CollectInfos.SUBMITTED_FAILED
             self.info.submitted_fail_reason = "The info's repository not in the submit white's info repository!"
             self.info.save()
-            print("It's repository do not in white list info's repository!")
+            logger.debug("It's repository do not in white list info's repository!")
             return
 
         #下载image文件
-        print("123",branch_project_info)
+        logger.debug(branch_project_info)
         url = get_image_url(self.info.branch, self.info.project, self.info.verify_url)
-        print(url)
+        logger.debug(url)
         f = download_image(url)
         path = decompress(f)
 
+        logger.debug(path)
         info_data = get_images(repo_tl, path)
-        print(info_data)
+        logger.debug(info_data)
         #将测试信息合成yaml文件
         device_type = branch_project_info.device_type.name
-        android_data = AndroidData(info_data, device_type.encode('utf-8'))
+        android_data = AndroidData(info_data, device_type)
         yaml_str = android_data.get_data_str()
-        print(yaml_str)
+        logger.debug(yaml_str)
         #调用submit提交job
         submitter = Submitter(branch_project_info, yaml_str)
         jobid = submitter.submit_job()
@@ -120,7 +147,7 @@ class InfoParse(object):
         self.info.save()
         test_job = TestJob(jobid=jobid, collect_infos=self.info)
         test_job.save()
-        print("submit successfully, jobid:%s"%jobid)
+        logger.debug("submit successfully, jobid:%s"%jobid)
     def start(self):
         self._parse_info()
     pass

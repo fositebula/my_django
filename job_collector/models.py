@@ -32,6 +32,9 @@ class CollectInfos(models.Model):
     LAST_JOB_INCOMPLETE = 1
     LAST_JOB_COMPLETE = 2
 
+    BUILDID_FROM_DEBUG = 0
+    BUILDID_FROM_VERIFY = 1
+
     branch = models.CharField('branch', max_length=50)
     project = models.CharField('project', max_length=50)
     buildid = models.CharField('buildid', max_length=50)
@@ -48,7 +51,7 @@ class CollectInfos(models.Model):
     project_num = models.CharField('project_num', max_length=50)
     test_task_type = models.CharField('test_task_type', max_length=50)
     bugid = models.CharField('bugid to gerrit', max_length=200)
-    repository = models.CharField('code repository', max_length=100)
+    repository = models.CharField('code repository', max_length=500)
 
     device_type = models.CharField('device type', max_length=50)
 
@@ -83,6 +86,7 @@ class CollectInfos(models.Model):
     verify_project_info = models.ForeignKey(VerifyProjectInfo, null=True)
     resubmit_count = models.IntegerField(verbose_name=r'resubmit count', default=1)
     last_job_status = models.IntegerField(verbose_name=u'last lava job status', default=LAST_JOB_NO_STATUS)
+    buildid_from_where = models.IntegerField(verbose_name=u'buildid from debug or ci', default=BUILDID_FROM_DEBUG)
 
     def __str__(self):
         return "%s---%s---%s---%s"%(self.buildid, self.branch, self.project, self.gerrit_id)

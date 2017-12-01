@@ -1,0 +1,10 @@
+li a {
+    color: red;
+}
+
+body {
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-image: url("images/backgroud.png");
+    background-color: yellow;
+}

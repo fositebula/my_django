@@ -41,10 +41,18 @@ def decompress(file_path):
     return local_path
 
 def get_image(image_type, local_path):
+
+    s_path = local_path.split('/')[2]
+    print(local_path + "/" + image_type + "-sign.img")
+    print(local_path + "/" + image_type + ".img")
     if os.path.exists(local_path + "/" + image_type + "-sign.img"):
-        return "http://10.0.70.63"+local_path + "/" + image_type + "-sign.img"
+        return "http://10.0.70.63:50000/"+s_path + "/" + image_type + "-sign.img"
     elif os.path.exists(local_path + "/" + image_type + ".img"):
-        return "http://10.0.70.63"+local_path + "/" + image_type + ".img"
+        return "http://10.0.70.63:50000/"+s_path + "/" + image_type + ".img"
+    elif os.path.exists(local_path + "/" + image_type + "-sign.bin"):
+        return "http://10.0.70.63:50000/"+s_path + "/" + image_type + "-sign.bin"
+    elif os.path.exists(local_path + "/" + image_type + ".bin"):
+        return "http://10.0.70.63:50000/"+s_path + "/" + image_type + ".bin"
     else:
         return None
 

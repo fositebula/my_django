@@ -15,28 +15,36 @@ from django.forms import modelformset_factory
 
 import requests
 import re
+import platform
+PYTHON_VERSION = platform.python_version()
 
-import xmlrpclib
-
-def get_lava_servers(info):
-    server_infos = LavaServerInfo.objects.all()
-    servers = []
-    print ("http://%s:%s@%s/RPC2" % (info.submit_user_name
-                              , info.submit_user_token
-                              , info.server_hostname))
-    for info in server_infos:
-        server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (info.submit_user_name
-                                                                 , info.submit_user_token
-                                                                 , info.server_hostname))
-        servers.append(server)
-    return servers
+# def get_lava_servers(info):
+#     server_infos = LavaServerInfo.objects.all()
+#     servers = []
+#     print ("http://%s:%s@%s/RPC2" % (info.submit_user_name
+#                               , info.submit_user_token
+#                               , info.server_hostname))
+#     for info in server_infos:
+#
+#         server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (info.submit_user_name
+#                                                                  , info.submit_user_token
+#                                                                  , info.server_hostname))
+#         servers.append(server)
+#     return servers
 
 def get_device_type_from_server():
     server_infos = LavaServerInfo.objects.all()
     for info in server_infos:
-        server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (info.submit_user_name
-                                                                 , info.submit_user_token
-                                                                 , info.server_hostname))
+        import xmlrpclib
+        if PYTHON_VERSION.startswith('2'):
+            server = xmlrpclib.ServerProxy("http://%s:%s@%s/RPC2" % (info.submit_user_name
+                                                                     , info.submit_user_token
+                                                                     , info.server_hostname))
+        else:
+            import xmlrpc.client
+            server = xmlrpc.client.ServerProxy("http://%s:%s@%s/RPC2" % (info.submit_user_name
+                                                                     , info.submit_user_token
+                                                                     , info.server_hostname))
         device_types = server.scheduler.device_types.list()
         for device_type in device_types:
             #print("####",DeviceType.objects.filter(name=device_type['name']))

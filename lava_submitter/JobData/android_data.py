@@ -1,3 +1,4 @@
+#coding=utf-8
 data_str = u"""
 device_type: sp9850ka
 job_name: lava_test_job_from_ci
@@ -86,18 +87,20 @@ class AndroidData(object):
         self.device_type = device_type
 
     def _set_job_data(self):
+        imgs = {}
         self.job_data['device_type'] = self.device_type
-        print("android_data.py", self.job_data["actions"])
-        if self.data.has_key('boot'):
-            self.job_data["actions"][2]['deploy']['images'].append({"boot":{"url":self.data['boot']}})
-        if self.data.has_key('system'):
-            self.job_data["actions"][2]['deploy']['images'].append({"system":{"url":self.data['system']}})
-        if self.data.has_key('userdata'):
-            self.job_data["actions"][2]['deploy']['images'].append({"userdata":{"url":self.data['userdata']}})
-        if self.data.has_key('uboot'):
-            self.job_data["actions"][2]['deploy']['images'].append({"uboot":{"url":self.data['uboot']}})
-        if self.data.has_key('tos'):
-            self.job_data["actions"][2]['deploy']['images'].append({"tos":{"url":self.data['tos']}})
+        if 'boot' in self.data:
+            imgs["boot"] = {"url": self.data['boot']}
+        if 'system' in self.data:
+            imgs["system"] = {"url": self.data['system']}
+        if 'userdata' in self.data:
+            imgs["userdata"] = {"url": self.data['userdata']}
+        if 'uboot' in self.data:
+            imgs["uboot"] = {"url": self.data['uboot']}
+        if 'tos' in self.data:
+            imgs["tos"] = {"url": self.data['tos']}
+        self.job_data["actions"][2]['deploy']['images'] = imgs
+
     def get_data_str(self):
         self._set_job_data()
         return yaml.dump(self.job_data)

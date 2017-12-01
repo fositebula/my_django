@@ -63,7 +63,7 @@ class DeviceType(models.Model):
         return "%s"%self.name
 
 class RepositoryCheckItem(models.Model):
-    repo_name = models.CharField(verbose_name='repository name', max_length=50)
+    repo_name = models.CharField(verbose_name='repository name', max_length=100)
     image_name = models.CharField(verbose_name='image name', max_length=50)
     verify_branch = models.ForeignKey('VerifyProjectInfo')
 
